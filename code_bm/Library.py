@@ -16,6 +16,9 @@ class Library:
         self.number_of_books = number_of_books
         self.books = sorted(books)
 
+    def unscanned_books(self):
+        return [book for book in self.books if book.scanned == False]
+
     def evaluate_books(self):
         z = 0
         sum_25 = 0
