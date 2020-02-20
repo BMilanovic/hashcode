@@ -1,6 +1,9 @@
 import numpy
 
 # reading input file
+from LSS import LSS
+from Registry import Registry
+
 filename = 'a_example.txt'
 f = open(filename, "r")
 
@@ -27,11 +30,18 @@ B, L, D = int(line[0]), int(line[1]), int(line[2].strip())
 
 ######################
 
-# 1. Signup Queue
-
 # 2. Library Selection System (LSS)
 # - selection based on registry score - penalty score
 # - update (2x, 1x similarity matrix (Boris), 1x registry (Khaled))
+
+# [libs]
+
+libs = []
+reg = Registry(libs)
+reg.calculate()
+
+lss = LSS(reg)
+result = lss.buildResult()
 
 # 3. Registry (key performance indicators) (expensive)
 #   Static
