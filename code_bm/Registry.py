@@ -2,35 +2,52 @@ class Registry:
 
     libs = []
     total_score = {}
+    score = {}
+    min_score = 0
     static_score = {}
     dynamic_score = {}
+
+    ALPHA = 0.33
+    BETA = 0.33
+    GAMMA = 0.33
+
+    TOTAL_A = 0.5
+    TOTAL_B = 0.5
 
     def __init__(self, libs):
         self.libs = libs
         return self
 
     def calculate(self):
-        self.calculate_static_score()
-        self.calculate_dynamic_score()
-        self.calculate_total_score()
-        return self
-
-    def calculate_static_score(self):
         for lib in self.libs:
-            lib.signup_days
-            lib.books_per_day
-            lib.number_of_books
+            self.calculate_static_score(lib)
+            self.calculate_dynamic_score(lib)
+            self.calculate_total_score(lib)
 
-            days_to_complete = lib.number_of_books / lib.books_per_day
-            total_days = lib.signup_days + days_to_complete
+    def calculate_static_score(self, lib):
+        days_to_complete = lib.number_of_books / lib.books_per_day
+        total_days = lib.signup_days + days_to_complete
 
-            # score needs the score of books in each lib
-            # [most popular] [popular] [not popular]
+        score_a = 1.0 / total_days
+        print(score_a)
+        score_b = 1.0 / lib.popularity_first_25
+        score_c = 1.0 / lib.popularity_mean
 
-            score = 0
+        self.static_score[lib.id] = self.ALPHA * score_a + self.BETA * score_b + self.GAMMA * score_c
 
-    def calculate_dynamic_score(self):
-        return
+    def calculate_dynamic_score(self, lib):
+        days_to_complete = lib.number_of_books / lib.books_per_day
+        total_days = lib.signup_days + days_to_complete
 
-    def calculate_total_score(self):
-        return
+        self.dynamic_score[lib.id] = 1. / (lib.popularity_mean*lib.number_of_books / total_days)
+
+    def calculate_total_score(self, lib):
+        score = self.TOTAL_A * self.static_score[lib.id] + self.TOTAL_B * self.dynamic_score[lib.id]
+        if score < self.min_score:
+            self.min_score = score
+
+        self.total_score[lib.id] = score
+        if score in self.score:
+            self.score[score].append(lib.id)
+        else:
+            self.score[score] = [lib.id]
