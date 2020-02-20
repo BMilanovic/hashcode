@@ -5,3 +5,7 @@ class Book:
     def __init__(self, id, score):
         self.id = id
         self.score = score
+        self.scanned = False
+
+    def mark_as_scanned(self):
+        self.scanned = True
