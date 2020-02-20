@@ -22,4 +22,6 @@ class LSS:
         final_restult = []
         for lib in signup_queue:
             final_restult.append([lib, lib.unscanned_books])
-        return
+            for book in lib.unscanned_books():
+                book.mark_as_scanned()
+        return final_restult
