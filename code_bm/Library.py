@@ -14,7 +14,7 @@ class Library:
         self.signup_days = signup_days
         self.books_per_day = books_per_day
         self.number_of_books = number_of_books
-        self.books = books.sort(key = lambda x: x.score)
+        self.books = sorted(books, key=lambda x: x.score, reverse=True)
 
     def unscanned_books(self):
         return [book for book in self.books if book.scanned == False]
