@@ -16,7 +16,6 @@ class Registry:
 
     def __init__(self, libs):
         self.libs = libs
-        return self
 
     def calculate(self):
         for lib in self.libs:
@@ -30,8 +29,8 @@ class Registry:
 
         score_a = 1.0 / total_days
         print(score_a)
-        score_b = 1.0 / lib.popularity_first_25
-        score_c = 1.0 / lib.popularity_mean
+        score_b = 1.0 / lib.popularity_first_25 if lib.popularity_first_25 else 1.0
+        score_c = 1.0 / lib.popularity_mean if lib.popularity_mean else 1.0
 
         self.static_score[lib.id] = self.ALPHA * score_a + self.BETA * score_b + self.GAMMA * score_c
 
@@ -39,7 +38,7 @@ class Registry:
         days_to_complete = lib.number_of_books / lib.books_per_day
         total_days = lib.signup_days + days_to_complete
 
-        self.dynamic_score[lib.id] = 1. / (lib.popularity_mean*lib.number_of_books / total_days)
+        self.dynamic_score[lib.id] = 1. / (lib.popularity_mean*lib.number_of_books / total_days) if lib.popularity_mean else 1.0
 
     def calculate_total_score(self, lib):
         score = self.TOTAL_A * self.static_score[lib.id] + self.TOTAL_B * self.dynamic_score[lib.id]
@@ -48,6 +47,6 @@ class Registry:
 
         self.total_score[lib.id] = score
         if score in self.score:
-            self.score[score].append(lib.id)
+            self.score[score].append(lib)
         else:
-            self.score[score] = [lib.id]
+            self.score[score] = [lib]

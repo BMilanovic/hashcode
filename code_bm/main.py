@@ -1,9 +1,16 @@
 #import numpy
 import Book
 import Library
+import Registry
+import LSS
 
 # reading input file
-input_filename = 'a_example.txt'
+#input_filename = 'a_example.txt'
+#input_filename = 'b_read_on.txt'
+#input_filename = 'c_incunabula.txt'
+#input_filename = 'd_tough_choices.txt'
+#input_filename = 'e_so_many_books.txt'
+#input_filename = 'f_libraries_of_the_world.txt'
 input_file = open(input_filename, "r")
 total_books, total_libraries, total_days = input_file.readline().split()
 total_books, total_libraries, total_days = int(total_books) , int(total_libraries), int(total_days)
@@ -37,8 +44,37 @@ while True:
     lib_index += 1
 
 
-print(all_libraries)
-print(all_libraries[0].books)
+#print(all_libraries)
+#print(all_libraries[0].books)
+
+reg = Registry.Registry(all_libraries)
+reg.calculate()
+
+lss = LSS.LSS(reg)
+# lss.build_signup_queue()
+result = lss.build_final_result()
+
+
+output_file_path = input_filename.replace('.txt', '_submission.txt')
+output_file = open(output_file_path, "w")
+output_file.write(str(len(result))+'\n')
+for lib_with_books in result:
+    output_file.write(str(lib_with_books[0].id) + ' ' + str(len(lib_with_books[1]))+'\n')
+    output_file.write(' '.join([str(book.id) for book in lib_with_books[1]])+ '\n')
+output_file.close()
+
+#output_lines = [
+#    len(lss.signup_queue())
+
+
+#    str(len(chosen_pizzas)),
+#     '\n',
+#    ' '.join(str(pizza) for pizza in sorted(chosen_pizzas))
+#]
+#output_file.writelines(output_lines)
+
+
+#output_file.close()
 # Class Book
 # Book parameters
 # ID, score
